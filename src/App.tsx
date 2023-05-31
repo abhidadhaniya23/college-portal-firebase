@@ -5,30 +5,32 @@ import Layout from "./components/layout/Layout";
 import { Toaster } from "react-hot-toast";
 import { useEffect } from "react";
 import { toast } from "react-hot-toast";
+import SignIn from "./pages/auth/SignIn";
 
 function App() {
   useEffect(() => {
     toast.success("Hello world!");
   }, []);
   return (
-    <>
-      <Toaster
-        position="bottom-right"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            fontFamily: "Inter Tight",
-          },
-        }}
-      />
-      <BrowserRouter>
-        <Layout>
-          <Routes>
-            <Route path={paths.home.path} element={<Home />} />
-          </Routes>
-        </Layout>
-      </BrowserRouter>
-    </>
+      <>
+          <Toaster
+              position="bottom-right"
+              toastOptions={{
+                  duration: 4000,
+                  style: {
+                      fontFamily: "Inter Tight",
+                  },
+              }}
+          />
+          <BrowserRouter>
+              <Layout>
+                  <Routes>
+                      <Route path={paths.home.path} element={<Home />} />
+                      <Route path={paths.signIn.path} element={<SignIn />} />
+                  </Routes>
+              </Layout>
+          </BrowserRouter>
+      </>
   );
 }
 
