@@ -10,11 +10,15 @@ import {
   MenuHandler,
   MenuList,
   MenuItem,
+  Spinner,
 } from "@material-tailwind/react";
 import { links, paths } from "../constants/paths";
 import { Link } from "react-router-dom";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { VscChromeClose } from "react-icons/vsc";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "../firebase/config";
+import AuthState from "../hooks/AuthState";
 
 export default function NavbarComponent() {
   const [openNav, setOpenNav] = useState(false);
@@ -44,7 +48,7 @@ export default function NavbarComponent() {
   useEffect(() => {
     window.addEventListener(
       "resize",
-      () => window.innerWidth >= 960 && setOpenNav(false)
+      () => window.innerWidth >= 960 && setOpenNav(false),
     );
   }, []);
 
@@ -58,7 +62,7 @@ export default function NavbarComponent() {
           className="mr-4 cursor-pointer py-1.5 font-normal"
         >
           <Link to={paths.home.path} className="text-2xl font-bold">
-            Meta Magnet
+            College Portal
           </Link>
         </Typography>
         <div className="hidden lg:block">{navList}</div>
@@ -91,9 +95,11 @@ export default function NavbarComponent() {
 }
 
 const AccountMenu = () => {
+  const [user, loading, error] = AuthState();
+  if (loading) return <Spinner />;
   return (
     <>
-      {true ? (
+      {user ? (
         <Menu>
           <MenuHandler>
             <Avatar

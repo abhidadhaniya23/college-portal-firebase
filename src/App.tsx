@@ -3,34 +3,33 @@ import { paths } from "./constants/paths";
 import Home from "./pages/Home";
 import Layout from "./components/layout/Layout";
 import { Toaster } from "react-hot-toast";
-import { useEffect } from "react";
-import { toast } from "react-hot-toast";
 import SignIn from "./pages/auth/SignIn";
+import SignUp from "./pages/auth/SignUp";
+import Profile from "./pages/Profile";
 
 function App() {
-  useEffect(() => {
-    toast.success("Hello world!");
-  }, []);
   return (
-      <>
-          <Toaster
-              position="bottom-right"
-              toastOptions={{
-                  duration: 4000,
-                  style: {
-                      fontFamily: "Inter Tight",
-                  },
-              }}
-          />
-          <BrowserRouter>
-              <Layout>
-                  <Routes>
-                      <Route path={paths.home.path} element={<Home />} />
-                      <Route path={paths.signIn.path} element={<SignIn />} />
-                  </Routes>
-              </Layout>
-          </BrowserRouter>
-      </>
+    <>
+      <Toaster
+        position="bottom-right"
+        toastOptions={{
+          duration: 4000,
+          style: {
+            fontFamily: "Inter Tight",
+          },
+        }}
+      />
+      <BrowserRouter>
+        <Layout>
+          <Routes>
+            <Route path={paths.home.path} element={<Home />} />
+            <Route path={paths.signIn.path} element={<SignIn />} />
+            <Route path={paths.signUp.path} element={<SignUp />} />
+            <Route path={paths.profile.path} element={<Profile />} />
+          </Routes>
+        </Layout>
+      </BrowserRouter>
+    </>
   );
 }
 

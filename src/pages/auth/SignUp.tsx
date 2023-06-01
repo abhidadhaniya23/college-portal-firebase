@@ -8,11 +8,13 @@ import {
   ListItemPrefix,
   Radio,
 } from "@material-tailwind/react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, redirect, useNavigate } from "react-router-dom";
 import { paths } from "../../constants/paths";
-import { auth } from "../../firebase/config";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../../firebase/config";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import { doc, setDoc } from "firebase/firestore";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
 
 type Inputs = {
@@ -22,7 +24,7 @@ type Inputs = {
   name: string;
 };
 
-const SignIn = () => {
+const SignUp = () => {
   const navigate = useNavigate();
   const [signInWithEmailAndPassword, user, loading, error] =
     useSignInWithEmailAndPassword(auth);
@@ -52,14 +54,34 @@ const SignIn = () => {
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
-      await signInWithEmailAndPassword(data.email, data.password)
-        .then(() => {
-          toast.success("Signed in successfully.");
-          navigate(paths.home.path);
+      await createUserWithEmailAndPassword(auth, data.email, data.password)
+        .then((userCredential) => {
+          // Create new entry in user collection in firestore.
+          setDoc(
+            doc(db, "users", data.email),
+            {
+              email: data.email,
+              role: data.role,
+              name: data.name,
+            },
+            { merge: true },
+          ).then(() => {
+            toast.success("Account created successfully.");
+
+            // Start login session
+            signInWithEmailAndPassword(data.email, data.password)
+              .then(() => {
+                navigate(paths.home.path);
+              })
+              .catch((error) => {
+                toast.error("Error signing in.");
+                console.error("Error signing in:", error);
+              });
+          });
         })
         .catch((error) => {
-          toast.error("Error signing in.");
-          console.error("Error signing in:", error);
+          toast.error("Email is already in use.");
+          console.log(error);
         });
     } catch (error) {
       console.log(error);
@@ -70,10 +92,10 @@ const SignIn = () => {
     <>
       <Card color="transparent" shadow={false}>
         <Typography variant="h4" color="blue-gray" className="mt-8">
-          Sign In
+          Sign Up
         </Typography>
         <Typography color="gray" className="mt-1 font-normal">
-          Fill up below details to sign in.
+          Enter your details to register
         </Typography>
 
         <form
@@ -120,6 +142,34 @@ const SignIn = () => {
           <div className="py-5 px-0">
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-6">
+                <Controller
+                  name="name"
+                  control={control}
+                  rules={{
+                    required: true,
+                    pattern: /^[a-zA-Z\s]*$/,
+                  }}
+                  render={({ field }) => (
+                    <Input
+                      error={errors.name ? true : false}
+                      size="lg"
+                      label="Name"
+                      {...field}
+                    />
+                  )}
+                />
+                <Typography
+                  color="red"
+                  className="-mt-4 text-left text-sm font-normal"
+                >
+                  {errors.name?.type === "required" && (
+                    <span>Name is required</span>
+                  )}
+                  {errors.name?.type === "pattern" && (
+                    <span>Enter a valid name</span>
+                  )}
+                </Typography>
+
                 <Controller
                   name="email"
                   control={control}
@@ -178,15 +228,15 @@ const SignIn = () => {
                 </Typography>
               </div>
               <Button type="submit" className="normal-case text-base" fullWidth>
-                {paths.signIn.label} as {watch("role")}
+                {paths.signUp.label} as {watch("role")}
               </Button>
               <Typography color="gray" className="text-center font-normal">
                 Already have an account?{" "}
                 <Link
-                  to={paths.signIn.path}
+                  to={paths.signUp.path}
                   className="font-medium text-blue-500 transition-colors hover:text-blue-700"
                 >
-                  {paths.signIn.label}
+                  {paths.signUp.label}
                 </Link>
               </Typography>
             </div>
@@ -197,4 +247,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
