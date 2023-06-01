@@ -8,7 +8,7 @@ const Layout = ({ children }: { children: JSX.Element }) => {
         <Navbar />
       </div>
       <SafeArea>
-        <main>{children}</main>
+        <main className="pb-10">{children}</main>
       </SafeArea>
     </>
   );

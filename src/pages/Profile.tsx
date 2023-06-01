@@ -8,14 +8,15 @@ import { userAvatar } from "../constants/constant";
 import CurrentUser from "../hooks/CurrentUser";
 import Loader from "../components/Loader";
 import { useQuery } from "react-query";
+import Dashboard from "../components/dashboard";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [user, loading] = AuthState();
 
   useEffect(() => {
-    if (!loading && !user) {
-      toast.error("Please sign in to view your profile.");
+    if (!user) {
+      toast.error("You are not logged in");
       navigate(paths.signIn.path);
     }
   }, [user]);
@@ -46,7 +47,9 @@ const Profile = () => {
             <Input disabled value={data?.email} />
           </div>
         </div>
+        <hr className="bg-gray-800/80 w-full mx-auto" />
       </div>
+      <Dashboard />
     </>
   );
 };

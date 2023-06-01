@@ -27,11 +27,10 @@ type Inputs = {
 
 const SignUp = () => {
   const navigate = useNavigate();
-  const [signInWithEmailAndPassword, user, loading, error] =
+  const [signInWithEmailAndPassword, , loading] =
     useSignInWithEmailAndPassword(auth);
 
   const {
-    register,
     handleSubmit,
     watch,
     control,
@@ -56,7 +55,7 @@ const SignUp = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       await createUserWithEmailAndPassword(auth, data.email, data.password)
-        .then((userCredential) => {
+        .then(() => {
           // Create new entry in user collection in firestore.
           setDoc(
             doc(db, "users", data.email),

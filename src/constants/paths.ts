@@ -15,6 +15,10 @@ export const paths: { [key: string]: { path: string; label: string } } = {
     path: "/profile",
     label: "Profile",
   },
+  dashboard: {
+    path: "/dashboard",
+    label: "Dashboard",
+  },
 };
 
 export const links = Object.keys(paths).map((key) => ({
