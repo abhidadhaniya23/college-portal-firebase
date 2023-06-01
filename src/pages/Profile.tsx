@@ -7,10 +7,12 @@ import { Avatar, Input, Typography } from "@material-tailwind/react";
 import { userAvatar } from "../constants/constant";
 import CurrentUser from "../hooks/CurrentUser";
 import Loader from "../components/Loader";
+import { useQuery } from "react-query";
 
 const Profile = () => {
   const navigate = useNavigate();
   const [user, loading] = AuthState();
+
   useEffect(() => {
     if (!loading && !user) {
       toast.error("Please sign in to view your profile.");
@@ -18,12 +20,11 @@ const Profile = () => {
     }
   }, [user]);
 
-  useEffect(() => {
-    const User = CurrentUser();
-    console.log(User);
-  }, []);
+  const { data, isLoading } = useQuery("user", CurrentUser, {
+    enabled: !!user,
+  });
 
-  if (loading) return <Loader />;
+  if (loading || isLoading) return <Loader />;
 
   return (
     <>
@@ -37,14 +38,12 @@ const Profile = () => {
           size="xxl"
           variant="circular"
         />
-        <Typography variant="h2">
-          {user?.displayName ? user.displayName : "Anonymous"}
-        </Typography>
+        <Typography variant="h2">{data?.name}</Typography>
         <hr className="bg-gray-800/80 w-full mx-auto" />
         <div className="my-5 flex flex-col gap-5 w-full">
           <div className="flex flex-col items-start gap-2">
             <label htmlFor="email">Email</label>
-            <Input disabled value={user?.email ? user.email : "Anonymous"} />
+            <Input disabled value={data?.email} />
           </div>
         </div>
       </div>
