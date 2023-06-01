@@ -7,8 +7,7 @@ type User = {
 };
 
 export const createUserWithEmailAndPassword = ({ email, password }: User) => {
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
   signInWithEmailAndPassword(email, password).then((userCredential) => {
     console.log(userCredential);
     return userCredential;

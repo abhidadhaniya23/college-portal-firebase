@@ -9,14 +9,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { useQuery } from "react-query";
 import TeacherList from "../../hooks/TeacherList";
 import { User } from "../../hooks/AuthState";
-import {
-  collection,
-  doc,
-  getDoc,
-  getDocs,
-  query,
-  setDoc,
-} from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Loader from "../Loader";
 import { toast } from "react-hot-toast";

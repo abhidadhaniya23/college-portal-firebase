@@ -1,10 +1,4 @@
-import {
-  Card,
-  Input,
-  Button,
-  Typography,
-  Spinner,
-} from "@material-tailwind/react";
+import { Card, Input, Button, Typography } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
 import { paths } from "../../constants/paths";
 import { auth } from "../../firebase/config";
