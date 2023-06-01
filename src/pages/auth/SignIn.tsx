@@ -3,10 +3,7 @@ import {
   Input,
   Button,
   Typography,
-  ListItem,
-  List,
-  ListItemPrefix,
-  Radio,
+  Spinner,
 } from "@material-tailwind/react";
 import { Link, useNavigate } from "react-router-dom";
 import { paths } from "../../constants/paths";
@@ -14,41 +11,24 @@ import { auth } from "../../firebase/config";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useEffect } from "react";
+import { Loading } from "../../hooks/AuthState";
+import Loader from "../../components/Loader";
 
 type Inputs = {
   email: string;
   password: string;
-  role: string;
-  name: string;
 };
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [signInWithEmailAndPassword, user, loading, error] =
-    useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
 
   const {
-    register,
     handleSubmit,
-    watch,
     control,
     formState: { errors },
-  } = useForm<Inputs>({
-    defaultValues: {
-      role: "student",
-    },
-  });
-
-  const data = [
-    {
-      label: "Student",
-      value: "student",
-    },
-    {
-      label: "Teacher",
-      value: "teacher",
-    },
-  ];
+  } = useForm<Inputs>();
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
@@ -66,6 +46,16 @@ const SignIn = () => {
     }
   };
 
+  const loading = Loading();
+
+  useEffect(() => {
+    if (!loading && auth.currentUser) {
+      toast.success("You are already signed in.");
+      navigate(paths.home.path);
+    }
+  }, [auth.currentUser]);
+
+  if (loading) return <Loader />;
   return (
     <>
       <Card color="transparent" shadow={false}>
@@ -80,43 +70,6 @@ const SignIn = () => {
           className="mt-7 flex flex-col mx-auto w-full sm:w-3/4 lg:w-1/3"
           onSubmit={handleSubmit(onSubmit)}
         >
-          <div className="w-full max-w-[24rem]">
-            <Controller
-              name="role"
-              control={control}
-              rules={{ required: true }}
-              render={({ field }) => (
-                <List className="flex-row" {...field}>
-                  {data.map(({ label, value }) => (
-                    <ListItem className="p-0" key={value}>
-                      <label
-                        htmlFor="horizontal-list-react"
-                        className="px-3 py-2 flex items-center w-full cursor-pointer"
-                      >
-                        <ListItemPrefix className="mr-3">
-                          <Radio
-                            value={value}
-                            name="horizontal-list"
-                            id="horizontal-list-react"
-                            defaultChecked={data[0].value === value}
-                            defaultValue={data[0].value}
-                            className="hover:before:opacity-0"
-                            containerProps={{
-                              className: "p-0",
-                            }}
-                          />
-                        </ListItemPrefix>
-                        <Typography color="blue-gray" className="font-medium">
-                          {label}
-                        </Typography>
-                      </label>
-                    </ListItem>
-                  ))}
-                </List>
-              )}
-            />
-          </div>
-
           <div className="py-5 px-0">
             <div className="flex flex-col gap-5">
               <div className="flex flex-col gap-6">
@@ -178,7 +131,7 @@ const SignIn = () => {
                 </Typography>
               </div>
               <Button type="submit" className="normal-case text-base" fullWidth>
-                {paths.signIn.label} as {watch("role")}
+                {paths.signIn.label}
               </Button>
               <Typography color="gray" className="text-center font-normal">
                 Already have an account?{" "}

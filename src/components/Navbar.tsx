@@ -16,9 +16,8 @@ import { links, paths } from "../constants/paths";
 import { Link } from "react-router-dom";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { VscChromeClose } from "react-icons/vsc";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../firebase/config";
-import AuthState from "../hooks/AuthState";
+import AuthState, { signOut } from "../hooks/AuthState";
+import { userAvatar } from "../constants/constant";
 
 export default function NavbarComponent() {
   const [openNav, setOpenNav] = useState(false);
@@ -95,7 +94,7 @@ export default function NavbarComponent() {
 }
 
 const AccountMenu = () => {
-  const [user, loading, error] = AuthState();
+  const [user, loading] = AuthState();
   if (loading) return <Spinner />;
   return (
     <>
@@ -103,9 +102,7 @@ const AccountMenu = () => {
         <Menu>
           <MenuHandler>
             <Avatar
-              src={
-                "https://cdn3.iconfinder.com/data/icons/avatars-round-flat/33/avat-01-512.png"
-              }
+              src={userAvatar}
               className="cursor-pointer border border-solid border-blue-500"
               referrerPolicy="no-referrer"
               alt="avatar"
@@ -116,7 +113,7 @@ const AccountMenu = () => {
             <Link to={paths.profile.path}>
               <MenuItem>{paths.profile.label}</MenuItem>
             </Link>
-            <MenuItem>
+            <MenuItem onClick={signOut}>
               <span>Logout</span>
             </MenuItem>
           </MenuList>

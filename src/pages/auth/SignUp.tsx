@@ -8,7 +8,7 @@ import {
   ListItemPrefix,
   Radio,
 } from "@material-tailwind/react";
-import { Link, redirect, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { paths } from "../../constants/paths";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase/config";
@@ -16,6 +16,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import { doc, setDoc } from "firebase/firestore";
 import { useSignInWithEmailAndPassword } from "react-firebase-hooks/auth";
+import { useEffect } from "react";
 
 type Inputs = {
   email: string;
@@ -87,6 +88,13 @@ const SignUp = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    if (!loading && auth.currentUser) {
+      toast.success("You are already signed in.");
+      navigate(paths.home.path);
+    }
+  }, [auth.currentUser]);
 
   return (
     <>
@@ -228,7 +236,8 @@ const SignUp = () => {
                 </Typography>
               </div>
               <Button type="submit" className="normal-case text-base" fullWidth>
-                {paths.signUp.label} as {watch("role")}
+                {paths.signUp.label} as{" "}
+                {watch("role").charAt(0).toUpperCase() + watch("role").slice(1)}
               </Button>
               <Typography color="gray" className="text-center font-normal">
                 Already have an account?{" "}
