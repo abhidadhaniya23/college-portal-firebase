@@ -22,24 +22,56 @@ import { userAvatar } from "../constants/constant";
 export default function NavbarComponent() {
   const [openNav, setOpenNav] = useState(false);
 
+  const [user] = AuthState();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    if (user) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, [user]);
+
   const navList = (
     <ul className="flex flex-col gap-0 lg:flex-row lg:items-center lg:gap-6">
       {links.map((link, index) => (
-        <Typography
-          key={index}
-          as="li"
-          variant="small"
-          color="blue-gray"
-          className="p-1 font-normal"
-        >
-          <Link
-            to={link.path}
-            target={link.path.startsWith("http") ? "_blank" : "_self"}
-            className="text-base normal-case hover:text-blue-500 duration-200"
-          >
-            {link.label}
-          </Link>
-        </Typography>
+        <>
+          {isAuthenticated
+            ? !link.public && (
+                <Typography
+                  key={index}
+                  as="li"
+                  variant="small"
+                  color="blue-gray"
+                  className="p-1 font-normal"
+                >
+                  <Link
+                    to={link.path}
+                    target={link.path.startsWith("http") ? "_blank" : "_self"}
+                    className="text-base normal-case hover:text-blue-500 duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                </Typography>
+              )
+            : link.public && (
+                <Typography
+                  key={index}
+                  as="li"
+                  variant="small"
+                  color="blue-gray"
+                  className="p-1 font-normal"
+                >
+                  <Link
+                    to={link.path}
+                    target={link.path.startsWith("http") ? "_blank" : "_self"}
+                    className="text-base normal-case hover:text-blue-500 duration-200"
+                  >
+                    {link.label}
+                  </Link>
+                </Typography>
+              )}
+        </>
       ))}
     </ul>
   );

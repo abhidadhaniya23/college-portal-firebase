@@ -16,7 +16,8 @@ type Inputs = {
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword, user, , error] =
+    useSignInWithEmailAndPassword(auth);
 
   const {
     handleSubmit,
@@ -27,9 +28,14 @@ const SignIn = () => {
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     try {
       await signInWithEmailAndPassword(data.email, data.password)
-        .then(() => {
-          toast.success("Signed in successfully.");
-          navigate(paths.home.path);
+        .then((useCredentials) => {
+          const user = useCredentials?.user;
+          if (user) {
+            toast.success("Signed in successfully.");
+            navigate(paths.profile.path);
+          } else {
+            toast.error("Wrong credentials.");
+          }
         })
         .catch((error) => {
           toast.error("Error signing in.");

@@ -1,8 +1,19 @@
+import { useState, useEffect } from "react";
 import { Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { paths } from "../constants/paths";
+import AuthState from "../hooks/AuthState";
 
 const Home = () => {
+  const [user] = AuthState();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  useEffect(() => {
+    if (user) {
+      setIsAuthenticated(true);
+    } else {
+      setIsAuthenticated(false);
+    }
+  }, [user]);
   return (
     <>
       <section className="flex flex-col-reverse gap-20 lg:gap-0 lg:flex-row justify-between items-center py-10">
@@ -19,9 +30,9 @@ const Home = () => {
             college portal
           </p>
           <div className="flex gap-4">
-            <Link to={paths.signIn.path}>
+            <Link to={isAuthenticated ? paths.profile.path : paths.signIn.path}>
               <Button variant="outlined" className="w-fit">
-                Get Started
+                {isAuthenticated ? "Dashboard" : "Get Started"}
               </Button>
             </Link>
           </div>

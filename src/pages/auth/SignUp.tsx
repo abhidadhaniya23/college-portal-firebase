@@ -71,7 +71,7 @@ const SignUp = () => {
             // Start login session
             signInWithEmailAndPassword(data.email, data.password)
               .then(() => {
-                navigate(paths.home.path);
+                navigate(paths.profile.path);
               })
               .catch((error) => {
                 toast.error("Error signing in.");
