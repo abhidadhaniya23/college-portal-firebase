@@ -65,7 +65,7 @@ export default function NavbarComponent() {
                   <Link
                     to={link.path}
                     target={link.path.startsWith("http") ? "_blank" : "_self"}
-                    className="text-base normal-case hover:text-blue-500 duration-200"
+                    className="text-lg lg:text-white normal-case hover:shadow-lg hover:shadow-blue-gray-200 duration-200 lg:bg-blue-500 p-2 rounded-lg"
                   >
                     {link.label}
                   </Link>

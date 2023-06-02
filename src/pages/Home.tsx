@@ -16,8 +16,20 @@ const Home = () => {
   }, [user]);
   return (
     <>
-      <section className="flex flex-col-reverse gap-20 lg:gap-0 lg:flex-row justify-between items-center py-10">
+      <section className="flex flex-col-reverse gap-20 lg:gap-0 lg:flex-row lg:justify-between justify-center items-center py-10">
         <div className="flex flex-col gap-7 text-left lg:w-2/5">
+          <div>
+            <Typography className="text-xl lg:hidden md:hidden flex mt-7">
+              Hii There👋
+            </Typography>
+            <Typography
+              variant="h1"
+              color="blue-gray"
+              className="text-3xl font-light lg:hidden md:hidden flex text-left tracking-wider mt-1 lg:mt-0"
+            >
+              WelCome To Collage Portal,
+            </Typography>
+          </div>
           <Typography
             variant="h1"
             color="blue-gray"
@@ -29,10 +41,10 @@ const Home = () => {
             Embark on a transformative educational journey as you explore our
             college portal
           </p>
-          <div className="flex gap-4">
+          <div className="flex gap-4 lg:mx-0 md:mx-0 mx-auto items-center mt-3 lg:mt-0 md:mt-0">
             <Link to={isAuthenticated ? paths.profile.path : paths.signIn.path}>
               <Button variant="outlined" className="w-fit">
-                {isAuthenticated ? "Dashboard" : "Get Started"}
+                {isAuthenticated ? "Go To Dashboard" : "Get Started"}
               </Button>
             </Link>
           </div>
@@ -41,7 +53,7 @@ const Home = () => {
           src="https://positiveally.com/wp-content/themes/pa-theme/images/tutor/tutionimages.png"
           alt="hero"
           draggable={false}
-          className="lg:w-[50%] w-11/12 h-full object-cover shadow-2xl rounded-xl"
+          className="lg:w-[50%] md:flex lg:flex hidden w-11/12 h-full object-cover shadow-2xl rounded-xl"
         />
       </section>
     </>
