@@ -48,8 +48,8 @@ const Profile = () => {
           </div>
         </div>
         <hr className="bg-gray-800/80 w-full mx-auto" />
+        <Dashboard />
       </div>
-      <Dashboard />
     </>
   );
 };
