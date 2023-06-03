@@ -25,12 +25,6 @@ export const paths: {
     public: false,
     subj: false,
   },
-  subjects: {
-    path: "/subjects",
-    label: "Subjects",
-    public: false,
-    subj: false,
-  }
 };
 
 export const links = Object.keys(paths).map((key) => ({

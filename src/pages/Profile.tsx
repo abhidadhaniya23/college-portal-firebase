@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import AuthState from "../hooks/AuthState";
+import AuthState, { User } from "../hooks/AuthState";
 import { useNavigate } from "react-router-dom";
 import { paths } from "../constants/paths";
 import { toast } from "react-hot-toast";
@@ -11,6 +11,8 @@ import { useQuery } from "react-query";
 import Dashboard from "../components/dashboard";
 
 const Profile = () => {
+  const currentUser = useQuery("user", CurrentUser, { enabled: !!User() });
+
   const navigate = useNavigate();
   const [user, loading] = AuthState();
 
@@ -48,8 +50,9 @@ const Profile = () => {
           </div>
         </div>
         <hr className="bg-gray-800/80 w-full mx-auto" />
-        <Dashboard />
+        {currentUser.data?.role !== "student" && <Dashboard />}
       </div>
+      {currentUser.data?.role === "student" && <Dashboard />}
     </>
   );
 };
