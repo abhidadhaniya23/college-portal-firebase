@@ -9,4 +9,5 @@ const TeacherList = async () => {
   return teachers;
 };
 
+
 export default TeacherList;
