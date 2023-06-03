@@ -12,17 +12,15 @@ const Subjects = () => {
 const [documents, setDocuments] = useState<Document[]>([]);
     
 interface Document {
-  // Define your document properties here
-  // For example:
   id: string;
   title: string;
   content: string;
-    Unsubscribe: string;
-    name: string;
-    teacher: string;
+  Unsubscribe: string;
+  name: string;
+  teacher: string;
 }    
     
-const fetchData = async (subject: string): Promise<Unsubscribe> => {
+const fetchData = async (subjects: string): Promise<Unsubscribe> => {
   try {
     const querySnapshot = collection(db, "subjects");
     const q = query(querySnapshot, orderBy("timestamp", "desc"));
