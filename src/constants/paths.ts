@@ -21,11 +21,6 @@ export const paths: {
     label: "Dashboard",
     public: false,
   },
-  subjects: {
-    path: "/subjects",
-    label: "Subjects",
-    public: false,
-  }
 };
 
 export const links = Object.keys(paths).map((key) => ({
