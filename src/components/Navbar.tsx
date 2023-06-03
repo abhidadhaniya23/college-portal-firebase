@@ -19,9 +19,11 @@ import { VscChromeClose } from "react-icons/vsc";
 import AuthState, { signOut } from "../hooks/AuthState";
 import { userAvatar } from "../constants/constant";
 
+
+
+
 export default function NavbarComponent() {
   const [openNav, setOpenNav] = useState(false);
-
   const [user] = AuthState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   useEffect(() => {
@@ -36,7 +38,7 @@ export default function NavbarComponent() {
     <ul className="flex flex-col gap-0 lg:flex-row lg:items-center lg:gap-6">
       {links.map((link, index) => (
         <>
-          {isAuthenticated
+          {isAuthenticated 
             ? !link.public && (
                 <Typography
                   key={index}
@@ -118,9 +120,11 @@ export default function NavbarComponent() {
           </IconButton>
         </div>
       </div>
-      <MobileNav open={openNav}>
-        <div className="container mx-auto ">{navList}</div>
-      </MobileNav>  
+      <MobileNav open={openNav} className="bg-blue-300 w-full p-6 mt-4 rounded-xl">
+        <div className="container mx-auto rounded-md">
+          {navList}
+        </div>
+      </MobileNav>
     </Navbar>
   );
 }
