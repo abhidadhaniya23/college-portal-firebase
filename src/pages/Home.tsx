@@ -21,7 +21,7 @@ const Home = () => {
       <section className="flex flex-col-reverse gap-20 lg:gap-0 lg:flex-row lg:justify-between justify-center items-center py-10">
         <div className="flex flex-col gap-7 text-left lg:w-2/5">
           <div>
-            <Typography className="text-xl lg:hidden md:hidden flex mt-7">
+            <Typography className="text-xl mt-14 lg:hidden md:hidden flex items-center">
               Hii There👋
             </Typography>
             <Typography

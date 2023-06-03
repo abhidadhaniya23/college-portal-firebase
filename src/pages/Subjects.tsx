@@ -38,7 +38,6 @@ const fetchData = async (subject: string): Promise<Unsubscribe> => {
       
   } catch (error) {
     console.log("Error fetching data:", error);
-    return () => {}; // Empty unsubscribe function
   }
 };
 
