@@ -149,7 +149,6 @@ const SubjectsList = () => {
     enabled: !!User(),
   });
   const subjectsData = subjectsList.data;
-  console.log(subjectsData);
 
   if (subjectsList.isLoading) return <Loader />;
   return (

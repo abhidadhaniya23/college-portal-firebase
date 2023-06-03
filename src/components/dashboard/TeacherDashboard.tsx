@@ -10,6 +10,7 @@ import {
 import {
   addDoc,
   collection,
+  deleteDoc,
   doc,
   getDoc,
   getDocs,
@@ -37,6 +38,33 @@ const TeacherDashboard = () => {
     reset,
     formState: { errors },
   } = useForm<Inputs>();
+
+  const fetchMaterials = async () => {
+    try {
+      const teacherEmail = auth.currentUser?.email as string;
+      const teacherDoc = await getDoc(doc(db, "users", teacherEmail));
+      const teacherId = teacherDoc.id;
+
+      const q = query(
+        collection(db, "materials"),
+        where("teacher", "==", doc(db, "users", teacherId)),
+      );
+      const querySnapshot = await getDocs(q);
+
+      const materialsData = querySnapshot.docs.map((doc) => ({
+        id: doc.id,
+        data: doc.data(),
+      }));
+      return materialsData;
+    } catch (error) {
+      console.error("Error fetching uploaded materials:", error);
+      return [];
+    }
+  };
+
+  const uploadedMaterials = useQuery("materials", fetchMaterials, {
+    enabled: !!auth.currentUser,
+  });
 
   const fetchAssignedSubject = async () => {
     const teacherEmail = auth.currentUser?.email as string;
@@ -71,6 +99,18 @@ const TeacherDashboard = () => {
     enabled: !!auth.currentUser,
   });
   const subjects = assignedSubjects.data;
+
+  const handleDeleteMaterial = async (materialId: string) => {
+    try {
+      // Delete the material document using its ID
+      await deleteDoc(doc(db, "materials", materialId));
+      toast.success("Material deleted successfully.");
+      // Trigger a refetch of the materials data after deleting a material
+      uploadedMaterials.refetch();
+    } catch (error) {
+      console.error("Error deleting material:", error);
+    }
+  };
 
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     const uploadMaterial = async () => {
@@ -107,6 +147,7 @@ const TeacherDashboard = () => {
               },
             );
             reset();
+            uploadedMaterials.refetch();
           });
         },
       );
@@ -125,7 +166,11 @@ const TeacherDashboard = () => {
   return (
     <>
       <hr className="bg-gray-800/80 mx-auto" />
-      <UploadedMaterials />
+      <UploadedMaterials
+        uploadedMaterials={uploadedMaterials.data}
+        handleDeleteMaterial={handleDeleteMaterial}
+        refetchMaterials={uploadedMaterials.refetch}
+      />
       <Typography variant="h4" color="blue-gray" className="mt-8">
         Upload Material
       </Typography>
@@ -206,32 +251,15 @@ const TeacherDashboard = () => {
   );
 };
 
-const UploadedMaterials = () => {
-  const fetchMaterials = async () => {
-    try {
-      const teacherEmail = auth.currentUser?.email as string;
-      const teacherDoc = await getDoc(doc(db, "users", teacherEmail));
-      const teacherId = teacherDoc.id;
+type UploadedMaterialsProps = {
+  uploadedMaterials: any;
+  handleDeleteMaterial: any;
+  refetchMaterials: any;
+};
 
-      const q = query(
-        collection(db, "materials"),
-        where("teacher", "==", doc(db, "users", teacherId)),
-      );
-      const querySnapshot = await getDocs(q);
-
-      const materialsData = querySnapshot.docs.map((doc) => doc.data());
-      return materialsData;
-    } catch (error) {
-      console.error("Error fetching uploaded materials:", error);
-      return [];
-    }
-  };
-
-  const uploadedMaterials = useQuery("materials", fetchMaterials, {
-    enabled: !!auth.currentUser,
-  });
-
-  const materials = uploadedMaterials.data;
+const UploadedMaterials = (props: UploadedMaterialsProps) => {
+  const { uploadedMaterials, handleDeleteMaterial } = props;
+  const materials = uploadedMaterials;
 
   if (uploadedMaterials.isLoading) return <Loader />;
 
@@ -243,7 +271,11 @@ const UploadedMaterials = () => {
       {materials && materials.length > 0 ? (
         <>
           {materials.map((material: any) => (
-            <MaterialCard key={material.name} material={material} />
+            <MaterialCard
+              key={material.data.name}
+              material={material}
+              onDeleteMaterial={handleDeleteMaterial}
+            />
           ))}
         </>
       ) : (
@@ -254,7 +286,11 @@ const UploadedMaterials = () => {
 };
 
 const MaterialCard = (props: any) => {
-  const { material } = props;
+  const { onDeleteMaterial } = props;
+
+  const material = props.material.data;
+  const materialId = props.material.id;
+
   return (
     <Card
       shadow={false}
@@ -285,8 +321,7 @@ const MaterialCard = (props: any) => {
           color="red"
           className="normal-case text-base"
           fullWidth
-          // [ ] Make this functionality work
-          // onClick={() => deleteMaterial()}
+          onClick={() => onDeleteMaterial(materialId)}
         >
           Delete Material
         </Button>
