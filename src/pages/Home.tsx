@@ -1,8 +1,10 @@
-import { useState, useEffect } from "react";
 import { Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { paths } from "../constants/paths";
 import AuthState from "../hooks/AuthState";
+import { useEffect,useState } from "react";
+
+
 
 const Home = () => {
   const [user] = AuthState();

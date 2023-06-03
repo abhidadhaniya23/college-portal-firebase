@@ -119,8 +119,8 @@ export default function NavbarComponent() {
         </div>
       </div>
       <MobileNav open={openNav}>
-        <div className="container mx-auto">{navList}</div>
-      </MobileNav>
+        <div className="container mx-auto ">{navList}</div>
+      </MobileNav>  
     </Navbar>
   );
 }
