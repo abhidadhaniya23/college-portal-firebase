@@ -4,6 +4,8 @@ import App from "./App.tsx";
 import "./index.css";
 import { ThemeProvider } from "@material-tailwind/react";
 import { QueryClient, QueryClientProvider } from "react-query";
+import * as serviceWorkerRegistration from "./serviceWorkerRegistration";
+
 
 const queryClient = new QueryClient();
 
@@ -16,3 +18,6 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     </ThemeProvider>
   </React.StrictMode>,
 );
+
+
+serviceWorkerRegistration.register();
