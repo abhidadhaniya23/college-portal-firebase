@@ -16,6 +16,7 @@ import Loader from "../Loader";
 import { toast } from "react-hot-toast";
 import { fetchSubjects } from "../../utils/SubjectList";
 import slugify from "slugify";
+import { BsTrash3 } from "react-icons/bs";
 
 type Inputs = {
   subjectName: string;
@@ -190,10 +191,15 @@ const SubjectsList = () => {
             className="flex justify-between items-center gap-4 border-b border-gray-200 py-2"
           >
             <Typography variant="h6">{subject.name}</Typography>
-            <Typography variant="h6">{subject.teacher.name}</Typography>
-            <IconButton color="red" onClick={() => deleteSubject(subject.name)}>
-              <i className="fas fa-trash" />
-            </IconButton>
+            <div className="flex flex-row items-center gap-3">
+              <Typography variant="h6">{subject.teacher.name}</Typography>
+              <IconButton
+                color="red"
+                onClick={() => deleteSubject(subject.name)}
+              >
+                <BsTrash3 size={20} />
+              </IconButton>
+            </div>
           </div>
         ))}
       </div>
