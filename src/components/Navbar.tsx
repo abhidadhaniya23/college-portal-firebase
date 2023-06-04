@@ -17,7 +17,12 @@ import { Link } from "react-router-dom";
 import { HiOutlineMenuAlt1 } from "react-icons/hi";
 import { VscChromeClose } from "react-icons/vsc";
 import AuthState, { signOut } from "../hooks/AuthState";
-import { userAvatar } from "../constants/constant";
+import useCurrentUserRole from "../utils/fetchCurrentUser";
+import {
+  adminAvatar,
+  studentAvatar,
+  teacherAvatar,
+} from "../constants/constant";
 
 let deferredPrompt: any;
 window.addEventListener("beforeinstallprompt", (e) => {
@@ -139,10 +144,7 @@ export default function NavbarComponent() {
           </IconButton>
         </div>
       </div>
-      <MobileNav
-        open={openNav}
-        className="bg-blue-300 w-full p-6 mt-4 rounded-xl"
-      >
+      <MobileNav open={openNav} className="w-full p-6 mt-4 rounded-xl">
         <div className="container mx-auto rounded-md">{navList}</div>
       </MobileNav>
       {/* <MobileNav open={openNav}>
@@ -154,6 +156,8 @@ export default function NavbarComponent() {
 
 const AccountMenu = () => {
   const [user, loading] = AuthState();
+
+  const userRole = useCurrentUserRole();
   if (loading) return <Spinner />;
   return (
     <>
@@ -161,7 +165,13 @@ const AccountMenu = () => {
         <Menu>
           <MenuHandler>
             <Avatar
-              src={userAvatar}
+              src={
+                userRole === "admin"
+                  ? adminAvatar
+                  : userRole === "teacher"
+                  ? teacherAvatar
+                  : studentAvatar
+              }
               className="cursor-pointer border border-solid border-blue-500"
               referrerPolicy="no-referrer"
               alt="avatar"
