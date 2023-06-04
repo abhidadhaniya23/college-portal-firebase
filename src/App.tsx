@@ -6,7 +6,6 @@ import { Toaster } from "react-hot-toast";
 import SignIn from "./pages/auth/SignIn";
 import SignUp from "./pages/auth/SignUp";
 import Profile from "./pages/Profile";
-import Subjects from "./pages/Subjects";
 import NotFound from "./components/NotFound";
 
 function App() {

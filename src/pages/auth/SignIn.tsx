@@ -16,8 +16,7 @@ type Inputs = {
 
 const SignIn = () => {
   const navigate = useNavigate();
-  const [signInWithEmailAndPassword, user, , error] =
-    useSignInWithEmailAndPassword(auth);
+  const [signInWithEmailAndPassword] = useSignInWithEmailAndPassword(auth);
 
   const {
     handleSubmit,

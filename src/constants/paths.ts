@@ -1,5 +1,10 @@
 export const paths: {
-  [key: string]: { path: string; label: string; public: boolean; subj:boolean | null };
+  [key: string]: {
+    path: string;
+    label: string;
+    public: boolean | null;
+    subj: boolean | null;
+  };
 } = {
   home: {
     path: "/",
@@ -17,7 +22,7 @@ export const paths: {
     path: "/sign-up",
     label: "Sign Up",
     public: true,
-    subj : false,
+    subj: false,
   },
   profile: {
     path: "/dashboard",
