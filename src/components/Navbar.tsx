@@ -19,13 +19,29 @@ import { VscChromeClose } from "react-icons/vsc";
 import AuthState, { signOut } from "../hooks/AuthState";
 import { userAvatar } from "../constants/constant";
 
-
-
+let deferredPrompt: any;
+window.addEventListener("beforeinstallprompt", (e) => {
+  // console.log("before install prompt");
+  deferredPrompt = e;
+});
 
 export default function NavbarComponent() {
   const [openNav, setOpenNav] = useState(false);
   const [user] = AuthState();
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  const installApp = async () => {
+    console.log("Install App.");
+    // Send a custom event
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === "accepted") {
+        deferredPrompt = null;
+      }
+    }
+  };
+
   useEffect(() => {
     if (user) {
       setIsAuthenticated(true);
@@ -38,7 +54,7 @@ export default function NavbarComponent() {
     <ul className="flex flex-col gap-0 lg:flex-row lg:items-center lg:gap-6">
       {links.map((link, index) => (
         <>
-          {isAuthenticated 
+          {isAuthenticated
             ? !link.public && (
                 <Typography
                   key={index}
@@ -75,6 +91,9 @@ export default function NavbarComponent() {
               )}
         </>
       ))}
+      <Button variant="outlined" color="blue" size="md" onClick={installApp}>
+        Install App
+      </Button>
     </ul>
   );
 
@@ -120,11 +139,12 @@ export default function NavbarComponent() {
           </IconButton>
         </div>
       </div>
-      <MobileNav open={openNav} className="bg-blue-300 w-full p-6 mt-4 rounded-xl">
-        <div className="container mx-auto rounded-md">
-          {navList}
-        </div>
-        </MobileNav>
+      <MobileNav
+        open={openNav}
+        className="bg-blue-300 w-full p-6 mt-4 rounded-xl"
+      >
+        <div className="container mx-auto rounded-md">{navList}</div>
+      </MobileNav>
       {/* <MobileNav open={openNav}>
         <div className="container mx-auto ">{navList}</div>
       </MobileNav> */}
