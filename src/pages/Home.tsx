@@ -2,9 +2,7 @@ import { Button, Typography } from "@material-tailwind/react";
 import { Link } from "react-router-dom";
 import { paths } from "../constants/paths";
 import AuthState from "../hooks/AuthState";
-import { useEffect,useState } from "react";
-
-
+import { useEffect, useState } from "react";
 
 const Home = () => {
   const [user] = AuthState();
@@ -29,7 +27,7 @@ const Home = () => {
               color="blue-gray"
               className="text-3xl font-light lg:hidden md:hidden flex text-left tracking-wider mt-1 lg:mt-0"
             >
-              WelCome To Collage Portal,
+              WelCome To College Portal,
             </Typography>
           </div>
           <Typography

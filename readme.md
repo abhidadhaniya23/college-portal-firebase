@@ -13,4 +13,4 @@ All Account has same password as email
 
 ### Student Account
 
-Manually Create
+Create manually.
