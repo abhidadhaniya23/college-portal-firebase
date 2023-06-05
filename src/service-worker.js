@@ -43,9 +43,10 @@ registerRoute(
 
     return true;
   },
-  createHandlerBoundToURL(process.env.PUBLIC_URL + "/index.html"),
+  createHandlerBoundToURL(
+    "https://college-portal-firebase.netlify.app" + "/index.html",
+  ),
 );
-console.log("Route path: ", process.env.PUBLIC_URL + "/index.html");
 
 // An example runtime caching route for requests that aren't handled by the
 // precache, in this case same-origin .png requests like those from in public/
