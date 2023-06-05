@@ -1,5 +1,5 @@
 var CACHE_NAME = "college-portal";
-var urlsToCache = ["/", "/index.html"];
+var urlsToCache = ["/"];
 
 // Install a service worker
 self.addEventListener("install", (event) => {
