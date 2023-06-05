@@ -1,20 +1,22 @@
 import {
   Button,
+  IconButton,
   Input,
   Option,
   Select,
   Typography,
 } from "@material-tailwind/react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useQuery } from "react-query";
+import { useQuery, useQueryClient } from "react-query";
 import TeacherList from "../../hooks/TeacherList";
 import { User } from "../../hooks/AuthState";
-import { doc, setDoc } from "firebase/firestore";
+import { deleteDoc, doc, setDoc } from "firebase/firestore";
 import { db } from "../../firebase/config";
 import Loader from "../Loader";
 import { toast } from "react-hot-toast";
 import { fetchSubjects } from "../../utils/SubjectList";
 import slugify from "slugify";
+import { BsTrash3 } from "react-icons/bs";
 
 type Inputs = {
   subjectName: string;
@@ -28,6 +30,8 @@ const AdminDashboard = () => {
     reset,
     formState: { errors },
   } = useForm<Inputs>();
+
+  const queryClient = useQueryClient();
 
   const teacherList = useQuery("teacherList", TeacherList, {
     enabled: !!User(),
@@ -48,6 +52,9 @@ const AdminDashboard = () => {
         await setDoc(subjectRef, newSubjectDoc);
         toast.success("Subject added successfully");
         reset();
+
+        // Update the subjectsList query after adding a subject
+        queryClient.invalidateQueries("subjectsList");
       } catch (error) {
         toast.error("Error in subject creation");
       }
@@ -68,10 +75,10 @@ const AdminDashboard = () => {
         Subject Creation
       </Typography>
       <form
-        className="mt-7 flex flex-col mx-auto items-center w-full sm:w-3/4 lg:w-1/3"
+        className="mt-7 flex flex-col mx-auto items-center w-full"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <div className="flex flex-col gap-6 w-full max-w-[24rem]">
+        <div className="flex flex-col gap-6 w-full">
           <Controller
             name="subjectName"
             control={control}
@@ -145,10 +152,31 @@ const AdminDashboard = () => {
 };
 
 const SubjectsList = () => {
+  const queryClient = useQueryClient();
+
   const subjectsList = useQuery("subjectsList", fetchSubjects, {
     enabled: !!User(),
   });
   const subjectsData = subjectsList.data;
+
+  const deleteSubject = async (subjectName: string) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this subject?",
+    );
+    if (!confirmDelete) {
+      return;
+    }
+    try {
+      const subjectRef = doc(db, "subjects", slugify(subjectName));
+      await deleteDoc(subjectRef);
+      toast.success("Subject deleted successfully");
+
+      // Update the subjectsList query after deleting a subject
+      queryClient.invalidateQueries("subjectsList");
+    } catch (error) {
+      toast.error("Error deleting subject");
+    }
+  };
 
   if (subjectsList.isLoading) return <Loader />;
   return (
@@ -156,14 +184,22 @@ const SubjectsList = () => {
       <Typography variant="h4" color="blue-gray" className="mt-8">
         Subjects - Assigned Teachers
       </Typography>
-      <div className="mt-7 flex flex-col mx-auto w-full sm:w-3/4 lg:w-1/3">
+      <div className="mt-7 flex flex-col mx-auto w-full">
         {subjectsData?.map((subject) => (
           <div
             key={subject.name}
             className="flex justify-between items-center gap-4 border-b border-gray-200 py-2"
           >
             <Typography variant="h6">{subject.name}</Typography>
-            <Typography variant="h6">{subject.teacher.name}</Typography>
+            <div className="flex flex-row items-center gap-3">
+              <Typography variant="h6">{subject.teacher.name}</Typography>
+              <IconButton
+                color="red"
+                onClick={() => deleteSubject(subject.name)}
+              >
+                <BsTrash3 size={20} />
+              </IconButton>
+            </div>
           </div>
         ))}
       </div>
